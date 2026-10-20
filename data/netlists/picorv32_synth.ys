@@ -1,0 +1,25 @@
+# Auto-generated synthesis script for picorv32
+# Target: generic
+read_verilog data\rtl\picorv32\picorv32.v
+hierarchy -top picorv32
+flatten
+proc
+flatten
+opt
+opt_expr
+opt_clean
+fsm
+techmap
+opt
+opt_expr
+opt_clean
+flatten
+clean
+opt
+memory
+opt
+abc -g simple -dff
+opt
+clean
+write_verilog -noattr -noexpr data\netlists\picorv32.v
+stat

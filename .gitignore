@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data (large generated files)
+data/netlists/*.v
+data/features/*.pt
+data/fault_list/*.json
+data/models/checkpoints/*.pt
+data/models/logs/
+data/evaluation_plots/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Yosys temp files
+*.blif
+*.json

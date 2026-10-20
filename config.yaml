@@ -1,0 +1,249 @@
+# =============================================================================
+# GNN & RL-Based ATPG Configuration
+# =============================================================================
+
+# --- RISC-V Core Selection ---
+riscv_cores:
+
+  ibex:
+    repo: "https://github.com/lowRISC/ibex"
+    rtl_dir: "rtl"
+    top_module: "ibex_core"
+    output_netlist: "data/netlists/ibex.v"
+
+  picorv32:
+    repo: "https://github.com/cliffordwolf/picorv32"
+    rtl_dir: "."
+    top_module: "picorv32"
+    output_netlist: "data/netlists/picorv32.v"
+
+
+# =============================================================================
+# YOSYS SYNTHESIS
+# =============================================================================
+
+synthesis:
+
+  target: "generic"
+
+  yosys_commands: "synthesis/synth.ys"
+
+  flatten: true
+
+  optimize: true
+
+
+# =============================================================================
+# FAULT MODEL
+# =============================================================================
+
+fault_model:
+
+  type: "stuck-at"
+
+  # Two faults per circuit node:
+  #   SA0 = stuck-at-0
+  #   SA1 = stuck-at-1
+  fault_per_node: 2
+
+
+# =============================================================================
+# GRAPH CONSTRUCTION
+# =============================================================================
+
+graph:
+
+  node_features:
+
+    - gate_type
+    - logic_value
+    - fanout
+    - depth
+    - cc0
+    - cc1
+    - co
+    - is_fault_site
+    - is_pi
+    - is_po
+
+
+# =============================================================================
+# GNN MODEL
+# =============================================================================
+
+gnn:
+
+  architecture: "GCN"
+
+  # Four GCN layers
+  num_layers: 4
+
+  hidden_dim: 128
+
+  dropout: 0.1
+
+  embedding_dim: 64
+
+  use_edge_features: true
+
+  edge_feature_dim: 3
+
+  batch_norm: true
+
+
+# =============================================================================
+# REINFORCEMENT LEARNING
+# =============================================================================
+
+rl:
+
+  algorithm: "PPO"
+
+  # PPO hyperparameters
+  learning_rate: 3.0e-4
+
+  gamma: 0.99
+
+  gae_lambda: 0.95
+
+  clip_epsilon: 0.2
+
+  entropy_coef: 0.01
+
+  value_loss_coef: 0.5
+
+  max_grad_norm: 0.5
+
+
+  # ---------------------------------------------------------------------------
+  # SCALED DEVELOPMENT / DEMONSTRATION TRAINING
+  #
+  # Full original project:
+  #   10000 episodes
+  #   500 steps / episode
+  #
+  # Current scaled experiment:
+  #   200 episodes
+  #   100 steps / episode
+  # ---------------------------------------------------------------------------
+
+  num_episodes: 200
+
+  max_steps_per_episode: 100
+
+  batch_size: 32
+
+  update_interval: 128
+
+
+  # ---------------------------------------------------------------------------
+  # Exploration
+  # ---------------------------------------------------------------------------
+
+  epsilon_start: 1.0
+
+  epsilon_end: 0.05
+
+  epsilon_decay: 0.9995
+
+
+  # ---------------------------------------------------------------------------
+  # Reward shaping
+  # ---------------------------------------------------------------------------
+
+  reward_fault_detected: 10.0
+
+  reward_no_conflict: 0.1
+
+  penalty_conflict: -1.0
+
+  penalty_backtrack: -0.5
+
+  penalty_timeout: -5.0
+
+
+# =============================================================================
+# TRAINING SUBGRAPH
+# =============================================================================
+#
+# Full PicoRV32:
+#     5,133 nodes
+#     8,590 circuit edges
+#     10,266 stuck-at faults
+#
+# PPO training:
+#     connected 2,000-node region
+#     maximum 200 faults
+#
+# The original full circuit and full fault list are NOT deleted or modified.
+# The subgraph is only a computational training region.
+# =============================================================================
+
+training_subgraph:
+
+  # Enable connected-subgraph training
+  enabled: true
+
+  # Number of circuit nodes given to the RL environment
+  num_nodes: 2000
+
+  # Starting node for BFS region selection
+  seed_node: 0
+
+  # Maximum number of faults used during training
+  max_faults: 200
+
+
+# =============================================================================
+# GENERAL TRAINING
+# =============================================================================
+
+training:
+
+  # Automatically use CUDA if available, otherwise CPU
+  device: "auto"
+
+  # General training configuration
+  num_epochs: 200
+
+  train_split: 0.8
+
+  val_split: 0.1
+
+  test_split: 0.1
+
+  checkpoint_dir: "data/models/checkpoints"
+
+  log_dir: "data/models/logs"
+
+  save_interval: 10
+
+  early_stopping_patience: 20
+
+
+# =============================================================================
+# EVALUATION
+# =============================================================================
+
+evaluation:
+
+  metrics:
+
+    - fault_coverage
+    - pattern_count
+    - avg_runtime
+    - avg_backtracks
+    - hard_to_detect_ratio
+
+  baselines:
+
+    - random_atpg
+    - podem
+
+  cross_core_eval: true
+
+  visualization:
+
+    save_plots: true
+
+    plot_dir: "data/evaluation_plots"

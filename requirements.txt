@@ -1,0 +1,27 @@
+# Deep Learning & GNN
+torch>=2.0.0
+torch-geometric>=2.3.0
+# NOTE: torch-scatter, torch-sparse, torch-cluster must be installed separately
+# after torch is installed. See README install instructions.
+
+# Numerical & Data
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# EDA / Synthesis (CLI tools - install via system package manager)
+# Yosys: sudo apt install yosys  OR  brew install yosys
+# fault: pip install fault (if available) or use Docker
+
+# Utilities
+tqdm>=4.65.0
+pyyaml>=6.0
+jsonlines>=3.1.0
+scikit-learn>=1.2.0
+
+# Logging & Experiment Tracking
+tensorboard>=2.13.0

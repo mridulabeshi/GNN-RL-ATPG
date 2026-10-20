@@ -1,0 +1,57 @@
+# Auto-generated synthesis script for ibex
+# Target: generic
+read_verilog -sv data\rtl\ibex\rtl\ibex_alu.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_branch_predict.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_cheriot_ex.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_cheriot_pkg.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_compressed_decoder.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_controller.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_core.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_counter.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_csr.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_cs_registers.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_decoder.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_dummy_instr.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_ex_block.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_fetch_fifo.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_icache.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_id_stage.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_if_stage.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_load_store_unit.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_lockstep.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_multdiv_fast.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_multdiv_slow.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_pkg.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_pmp.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_prefetch_buffer.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_register_file_ff.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_register_file_fpga.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_register_file_latch.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_top.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_top_tracing.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_tracer.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_tracer_pkg.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_trvk.sv
+read_verilog -sv data\rtl\ibex\rtl\ibex_wb_stage.sv
+hierarchy -top ibex_core
+flatten
+proc
+flatten
+opt
+opt_expr
+opt_clean
+fsm
+techmap
+opt
+opt_expr
+opt_clean
+flatten
+clean
+opt
+memory
+opt
+abc -g simple -dff
+opt
+clean
+write_verilog -noattr -noexpr data\netlists\ibex.v
+stat

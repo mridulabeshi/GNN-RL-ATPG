@@ -1,0 +1,39 @@
+# =============================================================================
+# Yosys Synthesis Script: RTL -> Gate-Level Netlist
+# =============================================================================
+# Usage: yosys -s synth.ys
+# Or programmatically: see synthesis/synthesize.py
+
+# 1. Read RTL files
+# read_verilog <RTL_FILES>
+
+# 2. Hierarchy check
+# hierarchy -top <TOP_MODULE>
+
+# 3. Translate to generic RTL
+proc                    # Process (always block) decomposition
+flatten                  # Flatten hierarchy
+
+# 4. Optimization
+opt                     # Basic optimization
+opt_expr                # Expression optimization
+opt_clean               # Remove unused wires/signals
+
+# 5. Technology-independent synthesis
+fsm                     # Extract and optimize FSMs
+fsm_detect              # Detect FSMs
+fsm_opt                 # Optimize FSMs
+
+# 6. Map to generic gate library
+techmap                  # Technology mapping
+opt                     # Post-mapping optimization
+opt_expr
+opt_clean
+
+# 7. Final flattening and cleanup
+flatten
+clean
+opt
+
+# 8. Output
+# write_verilog -noattr <OUTPUT_NETLIST>
